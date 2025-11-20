@@ -1,4 +1,4 @@
-FROM eclipse-temurin:17-jre-alpine
+FROM eclipse-temurin:17-jdk
 #FROM openjdk:17-ea-jdk-slim
 
 MAINTAINER xuxueli
