@@ -121,6 +121,89 @@ docker run -d \
 3. 建议在生产环境中修改默认密码和 accessToken
 4. 支持多平台: linux/amd64, linux/arm64
 
+---
+
+### 使用 Docker Compose 一键部署（推荐）
+
+项目根目录提供了 `docker-compose.yml` 文件，可以一键启动 MySQL 和 XXL-JOB-ADMIN。
+
+**快速启动：**
+```bash
+# 克隆或进入项目目录
+cd xxl-job
+
+# 启动所有服务（MySQL + xxl-job-admin）
+docker-compose up -d
+
+# 查看日志
+docker-compose logs -f xxl-job-admin
+
+# 停止服务
+docker-compose down
+
+# 停止服务并删除数据卷
+docker-compose down -v
+```
+
+**自定义配置：**
+```bash
+# 1. 复制环境变量配置文件
+cp .env.example .env
+
+# 2. 编辑 .env 文件，修改数据库密码等配置
+vim .env
+
+# 3. 启动服务
+docker-compose up -d
+```
+
+**docker-compose.yml 包含的服务：**
+- **MySQL 8.0**: 自动初始化 xxl_job 数据库
+- **xxl-job-admin**: 调度中心管理平台
+
+**访问地址：**
+- 管理控制台: http://localhost:8080/xxl-job-admin
+- 默认账号: `admin`
+- 默认密码: `123456`
+
+**常用命令：**
+```bash
+# 查看运行状态
+docker-compose ps
+
+# 查看实时日志
+docker-compose logs -f
+
+# 重启服务
+docker-compose restart
+
+# 重新构建并启动
+docker-compose up -d --build
+
+# 进入容器
+docker-compose exec xxl-job-admin sh
+docker-compose exec mysql bash
+```
+
+**环境变量配置说明：**
+| 变量名 | 说明 | 默认值 |
+|--------|------|--------|
+| MYSQL_ROOT_PASSWORD | MySQL root 密码 | root_pwd |
+| MYSQL_DATABASE | 数据库名称 | xxl_job |
+| MYSQL_USER | 数据库用户名 | xxljob |
+| MYSQL_PASSWORD | 数据库用户密码 | xxljob_pwd |
+| MYSQL_PORT | MySQL 端口 | 3306 |
+| XXL_JOB_ADMIN_PORT | 管理平台端口 | 8080 |
+| XXL_JOB_ACCESS_TOKEN | 访问令牌 | default_token |
+| TZ | 时区 | Asia/Shanghai |
+
+**生产环境建议：**
+1. 修改 `.env` 文件中的所有默认密码
+2. 修改 `XXL_JOB_ACCESS_TOKEN` 为强密码
+3. 使用外部 MySQL 数据库（修改 docker-compose.yml 中的数据库连接配置）
+4. 配置数据卷持久化备份
+5. 启用 MySQL 的 SSL 连接
+
 
 ## Communication
 - [社区交流](https://www.xuxueli.com/page/community.html)

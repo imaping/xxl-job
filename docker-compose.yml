@@ -1,0 +1,57 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:14
+    container_name: xxl-job-postgres14
+    restart: always
+    ports:
+      - 5432:5432
+    networks:
+      - pg14_network
+    environment:
+      POSTGRES_DB: xxl-job
+      POSTGRES_USER: xxl-job
+      POSTGRES_PASSWORD: xxl-job
+      TZ: Asia/Shanghai
+    volumes:
+      - ./.db:/var/lib/postgresql/data
+      - ./doc/db/tables_xxl_job_pg14.sql:/docker-entrypoint-initdb.d/init.sql
+    command: >
+      postgres
+      -c shared_preload_libraries=pg_trgm
+    healthcheck:
+      test:
+        [ "CMD", "pg_isready", "-U", "postgres", "-d", "postgres" ]
+      interval: 5s
+      timeout: 10s
+      retries: 5
+
+  xxl-job-admin:
+    image: ithinkings/xxl-job:latest
+    container_name: xxl-job-admin
+    environment:
+      PARAMS: >-
+        --spring.datasource.url=jdbc:postgresql://192.168.1.4:15432/xxl_job
+        --spring.datasource.username=xxljob
+        --spring.datasource.password=xxl-job
+        --xxl.job.accessToken=default_token
+      TZ: Asia/Shanghai
+    ports:
+      - "8080:8080"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - xxl-job-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/xxl-job-admin/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+networks:
+  xxl-job-network:
+    driver: bridge

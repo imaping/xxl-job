@@ -1,5 +1,5 @@
 -- 建议先创建数据库并切换
--- CREATE DATABASE xxl_job ENCODING = 'UTF8';
+CREATE DATABASE xxl_job ENCODING = 'UTF8';
 -- \c xxl_job
 
 -- ----------------------------

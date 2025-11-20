@@ -5,3 +5,11 @@
 target/
 .DS_Store
 .gitattributes
+
+# Docker
+.env
+docker-compose.override.yml
+
+# Logs
+logs/
+*.log
