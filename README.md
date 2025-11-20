@@ -71,7 +71,58 @@ XXL-JOB 是一个开源且免费项目，其正在进行的开发完全得益于
 - [English Documentation](https://www.xuxueli.com/xxl-job/en/)
 
 
-## Communication    
+## Docker Deployment / Docker 部署
+
+### 使用 Docker 快速部署
+
+**拉取镜像：**
+```bash
+docker pull ithinkings/xxl-job:latest
+```
+
+**运行容器：**
+```bash
+docker run -d \
+  --name xxl-job-admin \
+  -p 8080:8080 \
+  -e PARAMS="--spring.datasource.url=jdbc:mysql://your-mysql-host:3306/xxl_job?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=Asia/Shanghai \
+  --spring.datasource.username=root \
+  --spring.datasource.password=root_pwd" \
+  ithinkings/xxl-job:latest
+```
+
+**环境变量说明：**
+- `PARAMS`: Spring Boot 应用参数，可配置数据库连接、端口等
+- 默认端口: 8080
+- 默认账号: admin/123456
+
+**常用配置示例：**
+```bash
+# 自定义端口和数据库配置
+docker run -d \
+  --name xxl-job-admin \
+  -p 8080:8080 \
+  -e PARAMS="--server.port=8080 \
+  --spring.datasource.url=jdbc:mysql://192.168.1.100:3306/xxl_job?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=Asia/Shanghai \
+  --spring.datasource.username=xxljob \
+  --spring.datasource.password=xxljob123 \
+  --xxl.job.accessToken=your_token_here" \
+  ithinkings/xxl-job:latest
+```
+
+**访问控制台：**
+- URL: http://localhost:8080/xxl-job-admin
+- 默认账号: admin
+- 默认密码: 123456
+
+**注意事项：**
+1. 首次启动前需要先初始化数据库，SQL 脚本位于 `/doc/db/` 目录
+2. 确保 MySQL 数据库版本兼容（推荐 5.7+）
+3. 建议在生产环境中修改默认密码和 accessToken
+4. 支持多平台: linux/amd64, linux/arm64
+
+
+## Communication
 - [社区交流](https://www.xuxueli.com/page/community.html)
 
 
