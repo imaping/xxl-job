@@ -1,5 +1,5 @@
 #FROM openjdk:21
-FROM openjdk:17-jdk
+FROM openjdk:17-ea-jdk-slim
 
 MAINTAINER xuxueli
 
